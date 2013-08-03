@@ -4,7 +4,7 @@ This is the project template for front-end development. It was made to save the 
 
 ## Prerequisite
 
-- Please be sure you did installed [Grunt.js](http://gruntjs.com/getting-started) `http://gruntjs.com/getting-started`
+- Please be sure you did installed [Grunt.js](http://gruntjs.com/getting-started) `npm install -g grunt-cli`
 
 - And [Bower](http://bower.io/) `npm install -g bower`
 - Then you shoud install all packages from the project. You can make it running next commands:
