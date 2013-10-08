@@ -1,159 +1,214 @@
 module.exports = function (grunt) {
 
     grunt.initConfig({
-        pkg: grunt.file.readJSON('package.json'),
+        pkg:grunt.file.readJSON('package.json'),
 
-        vars: {
-            dist         : 'wwwroot',
-            distjs       : 'main.js',
-            distcss      : 'styles.css',
-            distvendorcss: 'vendor.css',
-            distappcss   : 'app.css'
+        vars:{
+            appdir:'app',
+
+            dist:'wwwroot/public',
+            distroot:'wwwroot',
+
+            distjs:'main.js',
+
+            distcss:'styles.css',
+            distvendorcss:'vendor.css',
+            distappcss:'app.css'
         },
 
-        jshint: {
-            options: {
-                curly  : true,
-                eqeqeq : true,
-                eqnull : true,
-                browser: true,
-                globals: {
-                    jQuery: true
+        jshint:{
+            options:{
+                curly:true,
+                eqeqeq:true,
+                eqnull:true,
+                browser:true,
+                globals:{
+                    jQuery:true
                 }
             },
 
-            gruntfile: ['gruntfile.js'],
+            gruntfile:['gruntfile.js'],
 
-            appjs: ['app/widgets/main.js', 'app/widgets/**/*.js']
+            appjs:['<%= vars.appdir %>/widgets/main.js', '<%= vars.appdir %>/widgets/**/*.js']
         },
 
-        cssmin: {
-            appcss : {
-                files: {
-                    '<%= vars.dist %>/css/<%= vars.distappcss %>': ['app/widgets/**/*.css']
+        cssmin:{
+            appcss:{
+                files:{
+                    '<%= vars.dist %>/css/<%= vars.distappcss %>':['<%= vars.appdir %>/widgets/**/*.css']
                 }
             },
-            distcss: {
-                files: { '<%= vars.dist %>/css/<%= vars.distcss %>': ['<%= vars.dist %>/css/<%= vars.distvendorcss %>', '<%= vars.dist %>/css/<%= vars.distappcss %>']}
+            distcss:{
+                files:{
+                    '<%= vars.dist %>/css/<%= vars.distcss %>':[
+                        '<%= vars.dist %>/css/<%= vars.distvendorcss %>',
+                        '<%= vars.dist %>/css/<%= vars.distappcss %>'
+                    ]
+                }
             }
         },
 
-        requirejs: {
-            appcss : {
-                options: {
-                    optimizeCss    : 'standard.keepLines',
-                    cssImportIgnore: null,
-                    cssIn          : 'app/css/<%= vars.distvendorcss %>',
-                    out            : '<%= vars.dist %>/css/<%= vars.distvendorcss %>'
+        requirejs:{
+            appcss:{
+                options:{
+                    optimizeCss:'standard.keepLines',
+                    cssImportIgnore:null,
+                    cssIn:'<%= vars.appdir %>/css/<%= vars.distvendorcss %>',
+                    out:'<%= vars.dist %>/css/<%= vars.distvendorcss %>'
 
                 }
             },
-            release: {
-                options: {
-                    mainConfigFile         : "app/widgets/main.js",
-                    name                   : "main",
-                    dir                    : '<%= vars.dist %>/widgets/',
-                    preserveLicenseComments: false,
-                    optimize               : "uglify2",
-                    generateSourceMaps     : true
+            release:{
+                options:{
+                    mainConfigFile:"<%= vars.appdir %>/widgets/main.js",
+                    name:"main",
+                    dir:'<%= vars.dist %>/rjs-build/',
+                    preserveLicenseComments:false,
+                    optimize:"uglify2",
+                    generateSourceMaps:true
                 }
-
             }
         },
 
-        watch: {
-            appjs       : {
-                files: ['app/widgets/main.js', 'app/widgets/**/*.js'],
-                tasks: ['jshint', 'copy:appjs']
+        watch:{
+            appjs:{
+                files:['<%= vars.appdir %>/widgets/main.js', '<%= vars.appdir %>/widgets/**/*.js'],
+                tasks:['jshint', 'copy:appjs']
             },
-            vendorjs    : {
-                files: ['app/components/**/*.js'],
-                tasks: ['copy:vendorjs']
+            vendorjs:{
+                files:['components/**/*.js'],
+                tasks:['copy:vendorjs']
             },
-            appcss      : {
-                files: ['app/css/includes.css', 'app/widgets/**/*.css'],
-                tasks: ['requirejs:appcss', 'cssmin:appcss', 'cssmin:distcss']
+            appcss:{
+                files:['<%= vars.appdir %>/css/<%= vars.distvendorcss %>', '<%= vars.appdir %>/widgets/**/*.css'],
+                tasks:['requirejs:appcss', 'cssmin:appcss', 'cssmin:distcss']
             },
-            apptemplates: {
-                files: ['app/*.html', 'app/widgets/**/*.html'],
-                tasks: ['copy:apptemplates']
+            apptemplates:{
+                files:['<%= vars.appdir %>/widgets/**/*.html'],
+                tasks:['copy:apptemplates']
             }
+
+//            release:{
+//                files:[
+//                    '<%= vars.appdir %>/widgets/main.js',
+//                    '<%= vars.appdir %>/widgets/**/*.js',
+//                    '<%= vars.appdir %>/css/<%= vars.distvendorcss %>',
+//                    '<%= vars.appdir %>/widgets/**/*.css',
+//                    '<%= vars.appdir %>/*.html',
+//                    '<%= vars.appdir %>/widgets/**/*.html'
+//                ],
+//                tasks:[
+//                    'requirejs',    // only before 'copy:release'
+//                    'copy:release', // only after 'requirejs' task
+//                    'cssmin:appcss',
+//                    'cssmin:distcss',
+//                    'clean:rjsbuild']
+//            }
         },
 
-        copy: {
-            appapi: {
+        copy:{
+            appjs:{
                 files:[
                     {
-                        expand: true,
-                        src   : ['api/**'],
-                        dest  : '<%= vars.dist %>/'
+                        expand:true,
+                        cwd:'<%= vars.appdir %>/',
+                        src:['widgets/main.js', 'widgets/**'],
+                        dest:'<%= vars.dist %>/'
                     }
                 ]
             },
 
-            appjs: {
-                files: [
+            vendorjs:{
+                files:[
                     {
-                        expand: true,
-                        cwd   : 'app/',
-                        src   : ['widgets/main.js', 'widgets/**'],
-                        dest  : '<%= vars.dist %>/'
+                        expand:true,
+                        src:['components/**', 'static_components/**'],
+                        dest:'<%= vars.distroot %>/'
                     }
                 ]
             },
 
-            vendorjs: {
-                files: [
+            rootpages:{
+                files:[
                     {
-                        expand: true,
-                        cwd   : 'app/',
-                        src   : ['components/**'],
-                        dest  : '<%= vars.dist %>/'
+                        expand:true,
+                        cwd:'<%= vars.appdir %>/',
+                        src:['*.html', 'images/**'],
+                        dest:'<%= vars.distroot %>/'
                     }
                 ]
             },
 
-            apptemplates: {
-                files: [
+            glyphicons:{
+                files:[
                     {
-                        expand: true,
-                        cwd   : 'app/',
-                        src   : ['*.html', 'widgets/**/*.html'],
-                        dest  : '<%= vars.dist %>/'
+                        expand:true,
+                        src:['static_components/fontello/fonts/*.*'],
+                        dest:'<%= vars.distroot %>/'
                     }
                 ]
             },
 
-            release: {
-                files: [
+            apptemplates:{
+                files:[
                     {
-                        expand: true,
-                        cwd   : 'app/',
-                        src   : ['*.html', 'components/requirejs/require.js'],
-                        dest  : '<%= vars.dist %>/'
+                        expand:true,
+                        cwd:'<%= vars.appdir %>/',
+                        src:['widgets/**/*.html'],
+                        dest:'<%= vars.dist %>/'
+                    }
+                ]
+            },
+
+            release:{
+                files:[
+                    {
+                        expand:true,
+                        src:['static_components/fontello/fonts/*.*'],
+                        dest:'<%= vars.distroot %>/'
+                    },
+                    {
+                        expand:true,
+                        src:['components/requirejs/require.js'],
+                        dest:'<%= vars.distroot %>/'
+                    },
+                    {
+                        expand:true,
+                        cwd:'<%= vars.dist %>/rjs-build',
+                        src:['main.js', '*.map'],
+                        dest:'<%= vars.dist %>/widgets'
+                    },
+                    {
+                        expand:true,
+                        cwd:'<%= vars.appdir %>/',
+                        src:['*.html', 'images/**'],
+                        dest:'<%= vars.distroot %>/'
                     }
                 ]
             }
         },
 
-        connect: {
-            dev    : {
-                options: {
-                    port: 4000,
-                    base: '<%= vars.dist %>'
+        connect:{
+            basic:{
+                options:{
+                    port:4000,
+                    base:'<%= vars.distroot %>'
                 }
             },
-            release: {
-                options: {
-                    keepalive: true,
-                    port     : 4000,
-                    base     : '<%= vars.dist %>'
+            alive:{
+                options:{
+                    keepalive:true,
+                    port:4000,
+                    base:'<%= vars.distroot %>'
                 }
             }
         },
 
 
-        clean: ['<%= vars.dist %>/']
+        clean:{
+            distroot:['<%= vars.distroot %>/'],
+            rjsbuild:['<%= vars.dist %>/rjs-build']
+        }
     });
 
     grunt.loadNpmTasks('grunt-contrib-copy');
@@ -167,50 +222,41 @@ module.exports = function (grunt) {
     grunt.loadNpmTasks('grunt-contrib-requirejs');
     grunt.loadNpmTasks('grunt-contrib-clean');
 
-    grunt.registerTask(
+    grunt.registerTask('default', [
+        'clean:distroot',
+        'jshint',
+        'copy:appjs',
+        'copy:vendorjs',
+        'requirejs:appcss',
+        'cssmin:appcss',
+        'cssmin:distcss',
+        'copy:apptemplates',
+        'copy:rootpages',
+        'copy:glyphicons'
+    ]);
 
+    grunt.registerTask('live', [
         'default',
 
-        [
-            'clean',
-            'jshint',
-            'copy:appjs',
-            'copy:vendorjs',
-            'copy:appapi',
-            'requirejs:appcss',
-            'cssmin:appcss',
-            'cssmin:distcss',
-            'copy:apptemplates'
-        ]);
+        'connect:basic', 'watch'
 
-    grunt.registerTask('live', ['default', 'connect:dev', 'watch']);
+//        'watch:appjs',
+//        'watch:vendorjs',
+//        'watch:appcss',
+//        'watch:apptemplates'
+    ]);
 
 
-    grunt.registerTask('release', ['clean', 'jshint', 'copy:release', 'requirejs']);
-    grunt.registerTask('live-release', ['release', 'connect:release']);
+    grunt.registerTask('release', [
+        'clean:distroot',
+        'jshint',
+        'requirejs', // only before 'copy:release'
+        'copy:release', // only after 'requirejs' task
+        'cssmin:appcss',
+        'cssmin:distcss',
+        'clean:rjsbuild'
+    ]);
 
-
+    grunt.registerTask('live-release', ['release', 'connect:alive']);
+    grunt.registerTask('live-release-watch', ['release', 'connect:basic', 'watch:release']);
 };
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
