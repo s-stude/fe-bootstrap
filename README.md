@@ -4,6 +4,8 @@ This is the project template for front-end development. It was made to save the 
 
 ## Prerequisite
 
+(I suppose u have node.js on your local box :)
+
 - Please be sure you did installed [Grunt.js](http://gruntjs.com/getting-started) `npm install -g grunt-cli`
 
 - And [Bower](http://bower.io/) `npm install -g bower`
