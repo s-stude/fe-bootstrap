@@ -7,14 +7,30 @@
 
         <title></title>
 
-        <link rel="stylesheet" type="text/css" href="css/styles.css">
+        <link rel="stylesheet" type="text/css" href="public/css/styles.css">
     </head>
     <body>
         <div class="container">
             <div class="row">
-                <a href="#demo">Demo</a>
+
+                <div class="span12">
+                    <div class="hero-unit">
+
+                        <ul class="nav nav-tabs">
+                            <li>
+                                <a href="#demo">Demo app</a>
+                            </li>
+                            <li>
+                                <a href="#not-implemented-your-one">Not implemented your one</a>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div id="app"></div>
+
             </div>
         </div>
-        <script data-main="widgets/main" src="components/requirejs/require.js"></script>
+        <script data-main="public/widgets/main" src="components/requirejs/require.js"></script>
     </body>
 </html>

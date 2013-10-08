@@ -1,11 +1,25 @@
 define(function (require) {
     console.log('Demo is running');
 
-    var $ = require('jQuery');
-    var _ = require('Underscore');
+    var $ = require('jQuery'); // Not used - just example
+    var _ = require('Underscore'); // Not used - just example
     var Backbone = require('Backbone');
 
-    console.log('jQuery', $);
-    console.log('Underscore', _);
-    console.log('Backbone', Backbone);
+    var headerTemplate = require('text!./templates/header.html');
+
+    var MainView = Backbone.View.extend({
+        initialize: function(){
+
+        },
+        render: function(){
+            this.$el.html(headerTemplate);
+        }
+    });
+
+    return {
+        show: function(widgetOptions){
+            var mainView = new MainView({ el: widgetOptions.el });
+            mainView.render();
+        }
+    };
 });

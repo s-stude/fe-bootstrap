@@ -1,9 +1,9 @@
 require.config({
     paths:{
-        jQuery:'./../components/jquery/jquery',
-        Underscore:'./../components/underscore/underscore',
-        Backbone:'./../components/backbone/backbone',
-        text: './../components/requirejs-text/text'
+        jQuery:'./../../components/jquery/jquery',
+        Underscore:'./../../components/underscore/underscore',
+        Backbone:'./../../components/backbone/backbone',
+        text: './../../components/requirejs-text/text'
     },
 
     shim:{

@@ -8,7 +8,7 @@ define(function (require) {
 
         demoPage: function(){
             var demo = require('demo');
-            demo.show();
+            demo.show({ el: '#app'});
         }
     });
 
