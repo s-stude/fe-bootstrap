@@ -73,7 +73,10 @@ module.exports = function (grunt) {
         watch:{
             appjs:{
                 files:['<%= vars.appdir %>/widgets/main.js', '<%= vars.appdir %>/widgets/**/*.js'],
-                tasks:['jshint', 'copy:appjs']
+                tasks:['jshint', 'copy:appjs'],
+                options: {
+                    livereload: true
+                }
             },
             vendorjs:{
                 files:['components/**/*.js'],
@@ -81,11 +84,17 @@ module.exports = function (grunt) {
             },
             appcss:{
                 files:['<%= vars.appdir %>/css/<%= vars.distvendorcss %>', '<%= vars.appdir %>/widgets/**/*.css'],
-                tasks:['requirejs:appcss', 'cssmin:appcss', 'cssmin:distcss']
+                tasks:['requirejs:appcss', 'cssmin:appcss', 'cssmin:distcss'],
+                options: {
+                    livereload: true
+                }
             },
             apptemplates:{
                 files:['<%= vars.appdir %>/widgets/**/*.html'],
-                tasks:['copy:apptemplates']
+                tasks:['copy:apptemplates'],
+                options: {
+                    livereload: true
+                }
             }
 
 //            release:{
